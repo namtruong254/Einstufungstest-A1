@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Einstufungstest A1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f4ef; --card:#ffffff; --ink:#1f2328; --muted:#5f6670; --line:#e3dfd6;
+    --accent:#9b1c31; --accent-soft:#f6e3e6; --ok:#1f7a4d; --ok-soft:#e1f3e9;
+    --bad:#b3261e; --bad-soft:#fbe4e2; --warn:#a86b00; --warn-soft:#fff1d6;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Be Vietnam Pro",system-ui,sans-serif;line-height:1.55;font-size:16px}
+  .wrap{max-width:860px;margin:0 auto;padding:24px 16px 120px}
+  header.top{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+  h1{font-size:1.55rem;margin:0 0 4px;letter-spacing:-.01em}
+  .sub{color:var(--muted);margin:0;font-size:.95rem}
+  .badge{display:inline-block;background:var(--accent);color:#fff;border-radius:8px;padding:2px 10px;font-weight:600;font-size:.85rem}
+  .intro{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;margin-bottom:22px;font-size:.95rem}
+  .intro ul{margin:6px 0 0;padding-left:20px}
+  .sticky{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0 12px;margin-bottom:8px;border-bottom:1px solid var(--line)}
+  .progress-row{display:flex;align-items:center;gap:12px}
+  .bar{flex:1;height:10px;background:#e8e3d8;border-radius:99px;overflow:hidden}
+  .bar>i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .count{font-weight:600;font-size:.9rem;min-width:80px;text-align:right}
+  h2.sec{font-size:1.15rem;margin:30px 0 12px;display:flex;align-items:center;gap:10px}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;margin-bottom:14px;scroll-margin-top:80px;transition:border-color .2s, box-shadow .2s}
+  .q.flash{box-shadow:0 0 0 3px var(--accent-soft);border-color:var(--accent)}
+  .qhead{display:flex;gap:10px;align-items:baseline;margin-bottom:6px}
+  .qnum{font-weight:700;color:var(--accent);min-width:28px}
+  .stem p{margin:2px 0}
+  .stem .sp{color:var(--muted);font-weight:600;margin-right:4px}
+  .letter{font-style:italic;background:#faf8f3;border-left:3px solid var(--line);padding:6px 12px;margin:4px 0}
+  .blank{display:inline-block;min-width:70px;border-bottom:2px solid var(--muted);text-align:center;padding:0 6px;font-weight:600;color:var(--accent)}
+  .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:10px}
+  .opt{display:flex;gap:10px;align-items:center;border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;cursor:pointer;background:#fff;font:inherit;text-align:left;color:inherit;transition:border-color .15s,background .15s}
+  .opt:hover{border-color:#bdb6a6}
+  .opt .k{width:24px;height:24px;flex:none;border-radius:50%;border:1.5px solid #bdb6a6;display:grid;place-items:center;font-size:.8rem;font-weight:700;color:var(--muted)}
+  .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+  .opt.sel .k{background:var(--accent);border-color:var(--accent);color:#fff}
+  .done .opt{cursor:default}
+  .done .opt.correct{border-color:var(--ok);background:var(--ok-soft)}
+  .done .opt.correct .k{background:var(--ok);border-color:var(--ok);color:#fff}
+  .done .opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+  .done .opt.wrong .k{background:var(--bad);border-color:var(--bad);color:#fff}
+  .verdict{display:none;margin-top:12px;font-weight:600;font-size:.92rem}
+  .done .verdict{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .verdict .tag{border-radius:8px;padding:2px 10px}
+  .tag.ok{background:var(--ok-soft);color:var(--ok)} .tag.bad{background:var(--bad-soft);color:var(--bad)} .tag.skip{background:var(--warn-soft);color:var(--warn)}
+  .explain-btn{font:inherit;font-size:.88rem;font-weight:600;color:var(--accent);background:none;border:1.5px solid var(--accent);border-radius:8px;padding:3px 12px;cursor:pointer}
+  .explain{display:none;margin-top:12px;padding:12px 14px;background:#faf8f3;border-radius:10px;border:1px dashed var(--line);font-size:.94rem}
+  .explain.open{display:block}
+  .explain h4{margin:0 0 6px;font-size:.95rem}
+  .explain ul{margin:6px 0 0;padding-left:20px}
+  .explain .rule{background:#fff;border-left:3px solid var(--accent);padding:6px 10px;margin:8px 0;border-radius:0 6px 6px 0}
+  .explain b.de{color:var(--accent)}
+  .reading{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;margin:0 0 14px;font-size:.95rem}
+  .reading .lab{font-weight:600;color:var(--muted);font-size:.85rem;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+  .reading p{margin:4px 0}
+  .actions{position:fixed;left:0;right:0;bottom:0;background:rgba(246,244,239,.96);border-top:1px solid var(--line);padding:12px 16px;display:flex;justify-content:center;gap:10px;z-index:6}
+  .btn{font:inherit;font-weight:600;border-radius:10px;padding:10px 20px;cursor:pointer;border:1.5px solid var(--accent)}
+  .btn.primary{background:var(--accent);color:#fff}
+  .btn.ghost{background:#fff;color:var(--accent)}
+  #result{display:none;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-bottom:22px}
+  #result.show{display:block}
+  .score-big{font-size:2.4rem;font-weight:700;line-height:1}
+  .score-row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;margin:6px 0 14px}
+  .secscore{flex:1;min-width:200px;border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+  .secscore .n{font-size:1.4rem;font-weight:700}
+  .level{background:var(--accent-soft);border-radius:10px;padding:12px 14px;margin:10px 0 16px}
+  .grid{display:grid;grid-template-columns:repeat(10,1fr);gap:6px}
+  .cell{font:inherit;font-weight:600;font-size:.9rem;border:none;border-radius:8px;padding:8px 0;cursor:pointer;color:#fff}
+  .cell.ok{background:var(--ok)} .cell.bad{background:var(--bad)} .cell.skip{background:#c9a25a}
+  .legend{display:flex;gap:14px;font-size:.85rem;color:var(--muted);margin-top:10px;flex-wrap:wrap}
+  .legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+  .legend .l1::before{background:var(--ok)} .legend .l2::before{background:var(--bad)} .legend .l3::before{background:#c9a25a}
+  .filter{display:flex;gap:8px;margin:14px 0 0;flex-wrap:wrap}
+  .filter label{font-size:.9rem;display:flex;gap:6px;align-items:center;cursor:pointer}
+  .hidden-q{display:none}
+  /* modal */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:20;padding:16px}
+  .modal.show{display:flex}
+  .modal .box{background:#fff;border-radius:var(--radius);padding:20px;max-width:420px;width:100%}
+  .modal .box p{margin:0 0 16px}
+  .modal .box .row{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+  footer{color:var(--muted);font-size:.8rem;margin-top:30px}
+  @media (max-width:560px){ .grid{grid-template-columns:repeat(5,1fr)} h1{font-size:1.3rem} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section id="result" aria-live="polite"></section>
+
+  <div class="sticky">
+    <div class="progress-row">
+      <div class="bar"><i id="barFill"></i></div>
+      <div class="count" id="count">0 / 40</div>
+    </div>
+    <div class="filter" id="filter" style="display:none">
+      <label><input type="radio" name="f" value="all" checked> Alle Fragen</label>
+      <label><input type="radio" name="f" value="wrong"> Nur falsche / leere Fragen</label>
+    </div>
+  </div>
+
+  <div id="quiz"></div>
+
+</div>
+
+<div class="actions" id="actions">
+  <button class="btn ghost" id="resetBtn">Neu starten</button>
+  <button class="btn primary" id="submitBtn">Abgeben</button>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="box">
+    <p id="modalText"></p>
+    <div class="row">
+      <button class="btn ghost" id="modalCancel">Weiter bearbeiten</button>
+      <button class="btn primary" id="modalOk">Trotzdem abgeben</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const B = '<span class="blank">_____</span>';
+const READ = {
+  r1: {lab:"Lesen Sie die E-Mail. Machen Sie dann die Aufgaben 19 und 20.", html:
+    "<p>Lieber Karl,</p><p>Laura hat am Samstag Geburtstag und wir wollen sie besuchen. Unsere Idee ist: Alle bringen etwas mit und wir kochen zusammen. Und am Abend gehen wir zusammen ins Theater. Wir laden Laura natürlich ein. Hast du Zeit? Kannst du einen Kuchen mitbringen? Antworte bitte schnell!</p><p>Viele Grüße<br>Martin</p>"},
+  r2: {lab:"Lesen Sie die Postkarte von Caroline. Machen Sie dann die Aufgaben 39 und 40.", html:
+    "<p>Liebe Anne,</p><p>herzliche Grüße von der Ostsee! Ralf und ich sind mit dem Fahrrad unterwegs. Wir haben Glück, die Sonne scheint fast immer. Es hat nur einmal geregnet. Gestern waren wir in Lübeck. Die Stadt gefällt mir. Wir haben die Altstadt besichtigt und auch eine Stadtführung mitgemacht. Es gibt viele interessante Sehenswürdigkeiten. Unser Hotel war auch im Zentrum, aber das Zimmer war ein bisschen laut. Wir haben nicht so gut geschlafen. Heute sind wir schon 60 km gefahren. Unser Urlaub macht viel Spaß, aber das Fahrradfahren ist auch anstrengend! Bis bald! Samstag sind wir wieder in Köln!</p><p>Liebe Grüße<br>Caroline</p>"}
+};
+const RF = ["richtig","falsch"];
+// stem: array of lines; prefix "A:" / "B:" = Sprecher; "L:" = Briefzeile
+const Q = [
+ {s:["A: Hallo, ich bin Julia.","B: Ich "+B+" Nina."], o:["ist","heiße","sein","spreche"], a:1,
+  e:"<h4>Verbkonjugation: <b class='de'>heißen</b> mit <i>ich</i></h4><div class='rule'>ich heiße · du heißt · er/sie heißt</div>Seinen Namen nennt man mit <i>Ich heiße …</i> (oder <i>Ich bin …</i>). Das Subjekt ist <i>ich</i>, also endet das Verb auf <b>-e</b>.<ul><li><b>ist</b>: 3. Person Singular (<i>er/sie ist</i>); mit <i>ich</i> heißt es <i>bin</i>.</li><li><b>sein</b>: Infinitiv, nicht konjugiert.</li><li><b>spreche</b>: bedeutet „eine Sprache sprechen“, nicht den Namen nennen.</li></ul>"},
+ {s:["A: Hallo, Cristina. "+B+"?","B: Danke, gut. Und dir?"], o:["Wie bist du","Wie geht es Ihnen","Wie geht","Wie geht es dir"], a:3,
+  e:"<h4>Nach dem Befinden fragen: <b class='de'>Wie geht es dir?</b></h4>Die Sprecherin nennt den Vornamen „Cristina“, und die Antwort lautet „Und <b>dir</b>?“. Es geht also um die informelle Anrede <i>du</i>. Feste Struktur: <i>Wie geht es + Dativ?</i><div class='rule'>du → dir · Sie → Ihnen</div><ul><li><b>Wie geht es Ihnen</b>: formelle Form (Sie), passt nicht unter Freunden.</li><li><b>Wie bist du</b>: keine übliche Frage nach dem Befinden.</li><li><b>Wie geht</b>: Es fehlen das Pronomen <i>es</i> und der Dativ.</li></ul>"},
+ {s:["A: Ich komme aus Berlin. Und Sie? "+B+" kommen Sie?","B: Ich komme aus München."], o:["Woher","Wie","Wer","Wo"], a:0,
+  e:"<h4>Fragewort für die Herkunft: <b class='de'>Woher?</b></h4>Die Antwort „<i>aus</i> München“ nennt die Herkunft, deshalb fragt man mit <b>Woher</b>.<div class='rule'>Woher? → aus … · Wo? → in … · Wohin? → nach/in …</div><ul><li><b>Wo</b>: fragt nach dem Ort; Antwort mit <i>in</i>.</li><li><b>Wie</b>: fragt nach der Art und Weise; <b>Wer</b>: fragt nach einer Person.</li></ul>"},
+ {s:["A: Was machen Sie gern?","B: "+B+" Und Sie?"], o:["Gern ich reise.","Reise ich gern.","Reise gern ich.","Ich reise gern."], a:3,
+  e:"<h4>Verbposition im Aussagesatz: Das Verb steht auf <b>Position 2</b></h4><div class='rule'>Ich (1) – reise (2) – gern.</div>Im Aussagesatz steht das konjugierte Verb immer an zweiter Stelle; <i>gern</i> folgt nach dem Verb.<ul><li><b>Gern ich reise</b>: Das Verb steht auf Position 3. Beginnt der Satz mit <i>Gern</i>, braucht man Inversion: <i>Gern reise ich.</i></li><li><b>Reise ich gern / Reise gern ich</b>: Verb auf Position 1 ist eine Ja/Nein-Frage, keine Antwort.</li></ul>"},
+ {s:["A: "+B+" gehen wir ins Museum?","B: Am Donnerstag!"], o:["Wie","Wohin","Wann","Wo"], a:2,
+  e:"<h4>Nach der Zeit fragen: <b class='de'>Wann?</b></h4>Die Antwort „Am Donnerstag“ ist eine Zeitangabe, deshalb ist das Fragewort <b>Wann</b>.<ul><li><b>Wohin</b>: fragt nach der Richtung; das Ziel (<i>ins Museum</i>) steht schon im Satz.</li><li><b>Wo</b>: fragt nach dem Ort; <b>Wie</b>: nach der Art und Weise.</li></ul>"},
+ {s:["A: Ich bin Ingenieur. Was "+B+" Sie von Beruf?","B: Ich bin Journalistin."], o:["ist","sind","haben","hat"], a:1,
+  e:"<h4>Das Verb <b class='de'>sein</b> mit der Höflichkeitsform <i>Sie</i></h4><div class='rule'>Was sind Sie von Beruf? – Ich bin …</div>Die Höflichkeitsform <i>Sie</i> wird immer wie <i>sie</i> (Plural) konjugiert: <b>sind</b>. Die Frage nach dem Beruf ist fest: <i>Was sind Sie von Beruf?</i> (nicht mit <i>haben</i>).<ul><li><b>ist / hat</b>: 3. Person Singular.</li><li><b>haben</b>: richtige Person, aber falsches Verb in dieser Struktur.</li></ul>"},
+ {s:["A: Ist das ein Hotel?","B: Ja, das ist "+B+" Hotel Hafenblick."], o:["der","die","das","ein"], a:2,
+  e:"<h4>Bestimmter Artikel, Neutrum: <b class='de'>das Hotel</b></h4><i>Hotel</i> ist neutral (<i>das Hotel</i>). Es wird zum zweiten Mal genannt und ist ein bestimmtes Hotel mit Namen (Hafenblick). Deshalb steht der bestimmte Artikel.<div class='rule'>neu / unbestimmt: ein Hotel → bekannt / mit Namen: das Hotel Hafenblick</div><ul><li><b>der / die</b>: falsches Genus.</li><li><b>ein</b>: unbestimmter Artikel; passt nicht zu einem Hotel mit Namen.</li></ul>"},
+ {s:["A: Ist das eine Kirche?","B: Eine Kirche? Nein, das ist "+B+" Kirche. Das ist der Bahnhof!"], o:["keine","kein","nicht","eine"], a:0,
+  e:"<h4>Negation von Nomen: <b class='de'>kein / keine</b></h4><div class='rule'>ein → kein · eine → keine</div>Nomen mit unbestimmtem Artikel (oder ohne Artikel) verneint man mit <i>kein-</i>. <i>Kirche</i> ist feminin (die Kirche → eine Kirche), also <b>keine</b>.<ul><li><b>kein</b>: Form für maskulin/neutral.</li><li><b>nicht</b>: verneint Verben, Adjektive oder Nomen mit bestimmtem Artikel, nicht <i>eine Kirche</i>.</li><li><b>eine</b>: widerspricht dem „Nein“.</li></ul>"},
+ {s:["A: Entschuldigung. Wo ist der Bahnhof?","B: Das ist ganz einfach. "+B+" rechts und dann geradeaus.","A: Vielen Dank!"], o:["Gehen hier","Gehen Sie hier","Hier Sie gehen","Sie hier gehen"], a:1,
+  e:"<h4>Imperativ mit <i>Sie</i></h4><div class='rule'>Infinitiv + Sie + …  →  Gehen Sie hier rechts!</div>Wenn man Fremden den Weg erklärt, verwendet man die Höflichkeitsform: Das Verb steht am Anfang, direkt danach <i>Sie</i>.<ul><li><b>Gehen hier</b>: <i>Sie</i> fehlt (so nur bei <i>wir</i>: <i>Gehen wir!</i>).</li><li><b>Hier Sie gehen / Sie hier gehen</b>: falsche Wortstellung.</li></ul>"},
+ {s:["A: Was essen wir heute?","B: Wir machen "+B+" Salat."], o:["die","ein","einen","eine"], a:2,
+  e:"<h4>Akkusativ bei maskulinen Nomen</h4><i>machen</i> braucht ein Akkusativobjekt. <i>Salat</i> ist maskulin (<i>der Salat</i>), der unbestimmte Artikel im Akkusativ ist also <b>einen</b>.<div class='rule'>Akkusativ: einen (m) · ein (n) · eine (f)</div>Nur das Maskulinum ändert sich im Akkusativ (ein → einen, der → den).<ul><li><b>ein</b>: Nominativ maskulin bzw. Neutrum.</li><li><b>die / eine</b>: falsches Genus.</li></ul>"},
+ {s:["A: Isst du gern Fisch?","B: Nein, Fisch "+B+" ich nicht."], o:["möchte","mag","kaufe","koche"], a:1,
+  e:"<h4>Vorlieben ausdrücken: <b class='de'>mögen</b> = gern essen</h4>Die Frage ist nach einer Vorliebe (<i>gern</i>), die negative Antwort lautet also: <i>Fisch <b>mag</b> ich nicht.</i><div class='rule'>mögen: ich mag · du magst · er mag</div>Achtung Inversion: Das Objekt <i>Fisch</i> steht vorne, das Verb bleibt auf Position 2, das Subjekt <i>ich</i> folgt.<ul><li><b>möchte</b>: ein Wunsch (jetzt), keine allgemeine Vorliebe.</li><li><b>kaufe / koche</b>: grammatisch korrekt, beantworten aber nicht die Frage „Isst du gern …?“.</li></ul>"},
+ {s:["A: "+B+" du noch Suppe?","B: Ja, gern, die Suppe ist lecker."], o:["Brauchst","Hast","Kochst","Möchtest"], a:3,
+  e:"<h4>Etwas anbieten: <b class='de'>Möchtest du …?</b></h4>„Ja, <b>gern</b>“ ist die Antwort auf ein Angebot. Höflich anbieten: <i>Möchtest du noch Suppe?</i><ul><li><b>Brauchst</b>: fragt nach einem Bedarf, kein Angebot.</li><li><b>Hast</b>: fragt, ob noch Suppe da ist; „Ja, gern“ passt nicht.</li><li><b>Kochst</b>: fragt, ob die Person Suppe kocht; passt nicht zur Antwort.</li></ul>"},
+ {s:["A: Jonas, was machst du morgen "+B+" halb fünf? Hast du Zeit?","B: Nein, da bin ich noch an der Uni."], o:["um","in","am","von"], a:0,
+  e:"<h4>Temporale Präposition: <b class='de'>um</b> + Uhrzeit</h4><div class='rule'>um + Uhrzeit (um halb fünf) · am + Tag/Tageszeit (am Montag, am Abend) · im + Monat/Jahreszeit (im Mai)</div><i>halb fünf</i> = 16:30 bzw. 4:30 Uhr, also eine Uhrzeit → <b>um</b>.<ul><li><b>am</b>: für Wochentage und Tageszeiten.</li><li><b>in</b>: für Monate, Jahreszeiten, Zeiträume.</li><li><b>von</b>: braucht <i>bis</i> (von … bis …).</li></ul>"},
+ {s:["A: "+B+" Carla am Samstag auch arbeiten?","B: Nein, da hat sie frei."], o:["Will","Muss","Kann","Möchte"], a:1,
+  e:"<h4>Modalverb <b class='de'>müssen</b> – Pflicht</h4>Die Antwort „da hat sie frei“ zeigt: Es geht um eine Arbeitspflicht. <i><b>Muss</b> Carla am Samstag auch arbeiten?</i><div class='rule'>müssen = Pflicht · können = Möglichkeit · wollen = Absicht · möchten = höflicher Wunsch</div><ul><li><b>Will / Möchte</b>: fragen nach einem Wunsch; „frei haben“ ist keine Antwort darauf.</li><li><b>Kann</b>: fragt nach einer Möglichkeit; passender wäre „Nein, sie hat keine Zeit“.</li></ul>"},
+ {s:["A: Das ist meine Familie und das ist "+B+" Hund Otto.","B: Ihr habt einen Hund? Super!"], o:["sein","Ihr","unser","dein"], a:2,
+  e:"<h4>Possessivartikel: <b class='de'>unser</b></h4>Die Person stellt ihre Familie vor, und die Antwort lautet „<b>Ihr</b> habt einen Hund?“. Der Hund gehört also der ganzen Familie: <i>unser Hund</i>.<div class='rule'>ich → mein · du → dein · er → sein · wir → unser · ihr → euer · Sie → Ihr</div><i>der Hund</i> ist maskulin, Nominativ → <i>unser</i> (ohne Endung).<ul><li><b>sein</b>: gehört „ihm“. <b>Ihr</b>: gehört „Ihnen“ oder „ihnen“. <b>dein</b>: gehört dem Gesprächspartner.</li></ul>"},
+ {s:["A: Was möchten Sie trinken?","B: Ich nehme eine Cola. Und für "+B+" bitte eine Apfelsaftschorle."], o:["ich","mich","Sie","euch"], a:1,
+  e:"<h4>Präposition <b class='de'>für</b> + Akkusativ</h4><div class='rule'>für, durch, gegen, ohne, um → immer Akkusativ</div>Die Person bestellt noch ein Getränk für sich selbst: <i>für mich</i>. Das Pronomen <i>ich</i> im Akkusativ ist <b>mich</b>.<ul><li><b>ich</b>: Nominativ, steht nicht nach einer Präposition.</li><li><b>Sie</b>: wäre der Kellner – unlogisch.</li><li><b>euch</b>: „für euch“, aber die Person spricht über sich selbst.</li></ul>"},
+ {s:["A: Telefonieren wir?","B: Ja, ich "+B+" ."], o:["am Nachmittag dich anrufe","anrufe dich am Nachmittag","rufe dich am Nachmittag an","rufe an dich am Nachmittag"], a:2,
+  e:"<h4>Trennbare Verben: <b class='de'>an|rufen</b></h4><div class='rule'>Ich <u>rufe</u> dich am Nachmittag <u>an</u>.  (konjugierter Teil auf Position 2, Präfix am Ende)</div>Bei trennbaren Verben steht der konjugierte Teil (<i>rufe</i>) auf Position 2, das Präfix (<i>an</i>) am Satzende. So entsteht die Satzklammer.<ul><li><b>am Nachmittag dich anrufe / anrufe dich …</b>: Das Verb ist nicht getrennt.</li><li><b>rufe an dich …</b>: getrennt, aber <i>an</i> muss ans Satzende.</li></ul>"},
+ {s:["A: Wie war der Ausflug mit dem Fahrrad?","B: Super, wir "+B+" viel Spaß!"], o:["waren","machen","haben","hatten"], a:3,
+  e:"<h4>Präteritum von <b class='de'>haben</b>: hatten</h4>Die Frage „Wie <b>war</b> …?“ bezieht sich auf einen abgeschlossenen Ausflug, die Antwort steht also auch in der Vergangenheit. Feste Wendung: <i>Spaß haben</i>.<div class='rule'>haben → ich hatte, du hattest, wir hatten · sein → ich war, wir waren</div><ul><li><b>waren</b>: Präteritum von <i>sein</i>; man sagt nicht „Spaß sein“.</li><li><b>haben</b>: richtige Wendung, aber Präsens.</li><li><b>machen</b>: „Spaß machen“ gibt es (<i>Das macht Spaß</i>), aber mit einer Sache als Subjekt – und hier ebenfalls Präsens.</li></ul>"},
+ {read:"r1", s:["Laura hat am Wochenende Geburtstag."], o:RF, a:0,
+  e:"<h4>Leseverstehen – Zeitangabe</h4>In der E-Mail steht: „Laura hat <b>am Samstag</b> Geburtstag.“ Samstag gehört zum Wochenende (Samstag + Sonntag). Die Aussage ist also <b>richtig</b>.<div class='rule'>Tipp: Die Aufgabe formuliert oft mit anderen Wörtern (Samstag → Wochenende). Nicht nur nach identischen Wörtern suchen!</div>"},
+ {read:"r1", s:["Laura lädt ihre Freunde ins Theater ein."], o:RF, a:1,
+  e:"<h4>Leseverstehen – Wer macht was?</h4>In der E-Mail steht: „Am Abend gehen wir zusammen ins Theater. <b>Wir laden Laura</b> natürlich <b>ein</b>.“ Die Freunde laden Laura ein, nicht umgekehrt. Die Aussage ist also <b>falsch</b>.<div class='rule'>Auf Subjekt und Objekt achten: <i>Wir</i> (Subjekt) laden <i>Laura</i> (Objekt) ein.</div>"},
+ // Abschnitt 2
+ {s:["A: Carola, kommst du mit?","B: Nein, ich kann leider nicht. Ich habe einen Termin "+B+" Chef."], o:["bei","zum","mit dem","mit der"], a:2,
+  e:"<h4>Präposition <b class='de'>mit</b> + Dativ</h4><div class='rule'>einen Termin mit jemandem haben · mit + Dativ: der Chef → mit dem Chef</div><i>Chef</i> ist maskulin; nach <i>mit</i> (immer Dativ) wird <i>der</i> zu <b>dem</b>.<ul><li><b>bei</b>: Der Artikel fehlt; richtig wäre <i>beim Chef</i> (= bei dem).</li><li><b>zum</b>: „zu dem“ bezeichnet eine Richtung und passt nicht zu <i>einen Termin haben</i>.</li><li><b>mit der</b>: Dativ feminin (<i>mit der Chefin</i>).</li></ul>"},
+ {s:["A: Jana, hast du "+B+" Kugelschreiber?","B: Ja, dein Kugelschreiber ist hier!"], o:["mein","meinen","dein","deinen"], a:1,
+  e:"<h4>Possessivartikel im Akkusativ: <b class='de'>meinen</b></h4>Jana antwortet „<b>dein</b> Kugelschreiber“. Die fragende Person fragt also nach ihrem <b>eigenen</b> Kugelschreiber → <i>mein-</i>. <i>haben</i> braucht den Akkusativ; <i>der Kugelschreiber</i> ist maskulin → <b>meinen</b>.<div class='rule'>Akkusativ maskulin: mein → meinen, dein → deinen</div><ul><li><b>mein</b>: Die Akkusativendung -en fehlt.</li><li><b>dein / deinen</b>: falscher Besitzer (Janas Kugelschreiber).</li></ul>"},
+ {s:["L:Sehr geehrter Herr Romero,","L:herzlich willkommen in Düsseldorf! Ihr Sprachkurs beginnt am Montag, den 9.3. um 9 Uhr. Haben Sie Fragen? Dann rufen Sie uns bitte an: 0211 – …","L:"+B,"L:Christopher März"], o:["Mit freundlichen Grüßen","Liebe Grüße","Lieber Herr","Auf Wiedersehen"], a:0,
+  e:"<h4>Formeller Briefschluss</h4>Der Brief beginnt mit „<b>Sehr geehrter</b> Herr Romero“ und verwendet <i>Sie</i> – er ist also formell. Der passende Gruß: <b>Mit freundlichen Grüßen</b>.<div class='rule'>formell: Sehr geehrte/r … → Mit freundlichen Grüßen<br>informell: Liebe/r … → Liebe Grüße / Viele Grüße</div><ul><li><b>Liebe Grüße</b>: für Freunde und Bekannte.</li><li><b>Lieber Herr</b>: eine Anrede am Briefanfang, kein Gruß.</li><li><b>Auf Wiedersehen</b>: mündlicher Abschied, nicht am Briefende.</li></ul>"},
+ {s:["A: Wie ist deine Wohnung?","B: Sie ist ruhig und hell, aber auch "+B+" ."], o:["zu billig","sehr teuer","dunkel","zu laut"], a:1,
+  e:"<h4>Konnektor <b class='de'>aber</b> und Logik</h4><i>aber</i> leitet einen Gegensatz ein: Die Wohnung hat Vorteile (ruhig, hell), <b>aber</b> auch einen anderen Nachteil. Nur <b>sehr teuer</b> ist ein Nachteil und widerspricht dem Vorherigen nicht.<ul><li><b>dunkel</b>: widerspricht <i>hell</i>.</li><li><b>zu laut</b>: widerspricht <i>ruhig</i>.</li><li><b>zu billig</b>: billig ist normalerweise kein Nachteil; <i>zu</i> verwendet man für etwas Negatives.</li></ul>"},
+ {s:["A: Wohin stellen wir das Sofa?","B: Natürlich "+B+" Wohnzimmer."], o:["in","in der","ins","im"], a:2,
+  e:"<h4>Wechselpräpositionen: <b class='de'>Wohin?</b> → Akkusativ</h4><div class='rule'>Wohin? (Richtung) → Akkusativ: in das = <b>ins</b> Wohnzimmer<br>Wo? (Position) → Dativ: in dem = <b>im</b> Wohnzimmer</div>Die Frage lautet <i>Wohin</i>, das Verb ist <i>stellen</i> (Bewegung), also Akkusativ. <i>das Wohnzimmer</i> ist neutral → <i>in das</i> → <b>ins</b>.<ul><li><b>im</b>: Dativ, Antwort auf <i>Wo?</i> (Das Sofa steht im Wohnzimmer.)</li><li><b>in</b>: Artikel fehlt. <b>in der</b>: Dativ feminin.</li></ul>"},
+ {s:["L:Lieber Max,","L:vielen Dank für die Einladung! "+B+" Können wir etwas mitbringen?","L:Liebe Grüße, Suse und Jan"], o:["Wir kommen gern!","Ich habe leider keine Zeit.","Hoffentlich sehen wir uns bald!","Wir haben eine Verabredung."], a:0,
+  e:"<h4>Textzusammenhang: eine Einladung annehmen</h4>Suse und Jan danken für die Einladung und fragen: „Können wir etwas mitbringen?“ Das fragt nur, wer <b>kommt</b>. Passend ist also eine Zusage: <b>Wir kommen gern!</b><ul><li><b>Ich habe leider keine Zeit</b>: eine Absage, widerspricht dem nächsten Satz; außerdem schreiben zwei Personen (wir), nicht <i>ich</i>.</li><li><b>Hoffentlich sehen wir uns bald</b>: ein Schlusssatz, wenn man sich nicht trifft.</li><li><b>Wir haben eine Verabredung</b>: passt inhaltlich nicht.</li></ul>"},
+ {s:["A: Malte, wo warst du heute Morgen?","B: Ich bin zur Uni gefahren. Peter und ich "+B+" unsere Präsentation geplant."], o:["bin","sind","habe","haben"], a:3,
+  e:"<h4>Perfekt: Hilfsverb <b class='de'>haben</b> wählen und konjugieren</h4><div class='rule'>Perfekt = haben/sein (Position 2) + Partizip II (Satzende)</div>Zwei Schritte:<ul><li><b>Hilfsverb wählen</b>: <i>planen</i> hat ein Akkusativobjekt und ist keine Bewegung → <i>haben</i>. (Vergleich: <i>Ich <b>bin</b> zur Uni gefahren</i> – Bewegung → sein.)</li><li><b>Konjugieren</b>: Subjekt „Peter und ich“ = <i>wir</i> → <b>haben</b>.</li></ul><b>bin / sind</b>: falsches Hilfsverb; <b>habe</b>: falsche Person."},
+ {s:["A: Wo arbeitet Nico jetzt?","B: Er hat einen Job in München "+B+"."], o:["genommen","nehmen","gefunden","gefallen"], a:2,
+  e:"<h4>Perfekt und Kollokation: <b class='de'>einen Job finden</b> → hat … gefunden</h4>Im Satz steht <i>hat</i> auf Position 2, am Ende fehlt also das Partizip II. Die natürliche Verbindung ist <i>einen Job <b>finden</b></i> → <i>gefunden</i>.<div class='rule'>finden – fand – hat gefunden</div><ul><li><b>nehmen</b>: Infinitiv, kein Partizip II.</li><li><b>genommen</b>: „einen Job nehmen“ ist hier keine natürliche Antwort auf „Wo arbeitet …?“.</li><li><b>gefallen</b>: falsche Bedeutung.</li></ul>"},
+ {s:["A: Wie ist deine Arbeit?","B: Ich mag meinen Job. Er ist lustig und "+B+"."], o:["ist gut die Bezahlung","die Bezahlung ist gut","gut die Bezahlung ist","ist die Bezahlung gut"], a:1,
+  e:"<h4>Konnektor <b class='de'>und</b> auf „Position 0“ – keine Inversion</h4><div class='rule'>und, aber, oder, denn, sondern = Position 0<br>… und <u>die Bezahlung</u> (1) <u>ist</u> (2) gut.</div><i>und</i> zählt nicht als Position. Danach folgt ein normaler Hauptsatz: Subjekt auf Position 1, Verb auf Position 2.<ul><li><b>ist die Bezahlung gut / ist gut die Bezahlung</b>: Verb auf Position 1 = Fragesatz.</li><li><b>gut die Bezahlung ist</b>: Verb am Ende = Nebensatz (z. B. nach <i>weil</i>), nicht nach <i>und</i>.</li></ul>"},
+ {s:["A: Kann ich "+B+" helfen?","B: Ja, bitte, ich suche einen Pullover."], o:["Ihnen","Sie","dich","ihm"], a:0,
+  e:"<h4>Verben mit Dativ: <b class='de'>helfen</b></h4><div class='rule'>helfen + Dativ: Sie → Ihnen · du → dir · er → ihm</div>Hier spricht eine Verkäuferin mit einer Kundin, also höflich mit <i>Sie</i>. <i>helfen</i> steht immer mit Dativ → <b>Ihnen</b>.<ul><li><b>Sie</b>: Akkusativ/Nominativ – falscher Kasus.</li><li><b>dich</b>: Akkusativ und informell – doppelt falsch.</li><li><b>ihm</b>: Dativ ist richtig, aber gemeint ist „er“, nicht die Gesprächspartnerin.</li></ul>"},
+ {s:["A: Welches Kleid gefällt dir?","B: "+B+" Kleid ist sehr schön."], o:["Ein","Das","Dieses","Welches"], a:2,
+  e:"<h4>Frage und Antwort: <b class='de'>welch- → dies-</b></h4><div class='rule'>Welcher Rock? – Dieser! · Welche Hose? – Diese! · Welches Kleid? – Dieses!</div>Mit <i>welch-</i> fragt man nach einer Auswahl aus mehreren Dingen. Die Antwort zeigt auf das Ding mit dem Demonstrativartikel <i>dies-</i>. <i>das Kleid</i> ist neutral → <b>dieses</b>.<ul><li><b>Ein</b>: unbestimmt, beantwortet „welches?“ nicht.</li><li><b>Das</b>: mündlich mit Zeigegeste möglich, die Standardantwort auf <i>welches</i> ist aber <i>dieses</i>.</li><li><b>Welches</b>: wiederholt nur das Fragewort.</li></ul>"},
+ {s:["A: Wo sind deine Stiefel?","B: Sie waren zu klein. Ich habe sie "+B+"."], o:["tauscht um","getauscht um","umtauschen","umgetauscht"], a:3,
+  e:"<h4>Partizip II trennbarer Verben: <b class='de'>um|tauschen → umgetauscht</b></h4><div class='rule'>Präfix + <b>ge</b> + Stamm + t: um<b>ge</b>tauscht · ein<b>ge</b>kauft · an<b>ge</b>rufen</div><i>habe</i> steht auf Position 2, am Ende braucht man das Partizip II. Bei trennbaren Verben steht <i>-ge-</i> zwischen Präfix und Stamm, alles in einem Wort.<ul><li><b>tauscht um</b>: Präsens, 3. Person.</li><li><b>getauscht um</b>: <i>ge-</i> an falscher Stelle und getrennt.</li><li><b>umtauschen</b>: Infinitiv.</li></ul>"},
+ {s:["A: Ich habe Halsschmerzen!","B: "+B+" eine Milch mit Honig. Das hilft!"], o:["Trinken","Trinkt","Trink","Trinkst du"], a:2,
+  e:"<h4>Imperativ mit <b class='de'>du</b></h4><div class='rule'>du trinkst → ohne <i>du</i> und ohne <i>-st</i> → <b>Trink!</b></div>Das ist ein Ratschlag an eine Freundin bzw. einen Freund (eine Person, informell), also Imperativ in der <i>du</i>-Form: <b>Trink</b> (oder Trinke) eine Milch mit Honig!<ul><li><b>Trinken</b>: <i>Sie</i> fehlt; formell heißt es <i>Trinken Sie …</i></li><li><b>Trinkt</b>: Imperativ für <i>ihr</i> (mehrere Personen).</li><li><b>Trinkst du</b>: eine Frage, kein Ratschlag.</li></ul>"},
+ {s:["A: Was hat der Arzt gesagt?","B: Er sagt, ich "+B+" drei Tage im Bett bleiben."], o:["soll","kann","will","möchte"], a:0,
+  e:"<h4><b class='de'>sollen</b>: Ratschläge oder Aufforderungen anderer wiedergeben</h4><div class='rule'>Der Arzt sagt: „Bleiben Sie im Bett!“ → Er sagt, ich <b>soll</b> im Bett bleiben.</div>Gibt man eine Aufforderung oder einen Rat einer dritten Person (hier: der Arzt) wieder, verwendet man <i>sollen</i>.<ul><li><b>kann</b>: Möglichkeit, Erlaubnis.</li><li><b>will / möchte</b>: eigener Wunsch, nicht die Anweisung des Arztes.</li></ul>"},
+ {s:["A: Wo ist Jochen?","B: Er ist zu Hause. Er hatte einen Unfall, sein Knie ist verletzt. Er "+B+" Fußball spielen."], o:["muss","muss nicht","darf","darf nicht"], a:3,
+  e:"<h4>Verbot: <b class='de'>nicht dürfen</b> ≠ <b class='de'>nicht müssen</b></h4><div class='rule'>darf nicht = es ist verboten · muss nicht = es ist nicht nötig</div>Das Knie ist verletzt, Jochen <b>darf</b> also <b>nicht</b> Fußball spielen.<ul><li><b>muss nicht</b>: „Es ist nicht nötig“ – falsche Bedeutung (typischer Fehler!).</li><li><b>muss / darf</b>: „Pflicht / Erlaubnis zu spielen“ – widerspricht der Verletzung.</li></ul>"},
+ {s:["A: Regina, mit "+B+" warst du denn im Urlaub?","B: Mit zwei Freunden, Tom und Eric."], o:["wen","wem","wer","was"], a:1,
+  e:"<h4>Fragewort nach Dativ-Präposition: <b class='de'>mit wem?</b></h4><div class='rule'>wer (Nom.) → wen (Akk.) → wem (Dat.)</div><i>mit</i> steht immer mit Dativ, die Frage nach einer Person lautet also <b>wem</b>. Auch die Antwort steht im Dativ: <i>mit zwei Freunde<b>n</b></i>.<ul><li><b>wen</b>: Akkusativ (nach <i>für</i>: Für wen?).</li><li><b>wer</b>: Nominativ.</li><li><b>was</b>: fragt nach Sachen; mit <i>mit</i> sagt man <i>womit</i>.</li></ul>"},
+ {s:["A: Gefällt dir die Stadt?","B: Ja, Wien ist interessant! Hier kann "+B+" so viel machen. Es gibt viele Sehenswürdigkeiten, schöne Cafés, …"], o:["man","es","er","sie"], a:0,
+  e:"<h4>Indefinitpronomen <b class='de'>man</b></h4><div class='rule'>man + Verb in der 3. Person Singular: man kann, man macht</div>Gemeint ist keine bestimmte Person, sondern alle Menschen allgemein: „Hier kann <b>man</b> so viel machen.“<ul><li><b>es / er / sie</b>: beziehen sich auf ein bestimmtes, schon genanntes Nomen; <i>sie</i> könnte „die Stadt“ sein, aber eine Stadt „macht“ keine Aktivitäten.</li></ul>"},
+ {s:["A: Und wie war das Wetter im Urlaub?","B: "+B+" war es nicht so gut. Am Anfang hat es viel geregnet. Später hatten wir viel Sonne. Das war super!"], o:["Jetzt","Dann","Zuerst","Zum Schluss"], a:2,
+  e:"<h4>Zeitliche Reihenfolge: <b class='de'>zuerst – später – zum Schluss</b></h4>Die Antwort erzählt chronologisch: Am Anfang hat es geregnet, später gab es Sonne. Der erste Satz beschreibt also den Anfang: <b>Zuerst</b> war es nicht so gut.<div class='rule'>zuerst → dann → danach/später → zum Schluss</div><ul><li><b>Jetzt</b>: Gegenwart – passt nicht zu einem vergangenen Urlaub.</li><li><b>Dann</b>: braucht ein Ereignis davor.</li><li><b>Zum Schluss</b>: widerspricht dem Text, denn am Ende war das Wetter gut.</li></ul>"},
+ {read:"r2", s:["Caroline mag Lübeck."], o:RF, a:0,
+  e:"<h4>Leseverstehen – Umformulierung</h4>Auf der Postkarte steht: „Gestern waren wir in Lübeck. <b>Die Stadt gefällt mir.</b>“ <i>Etwas gefällt mir</i> = <i>Ich mag etwas</i>. Die Aussage ist also <b>richtig</b>.<div class='rule'>Die Stadt gefällt mir. ≈ Ich mag die Stadt.</div>"},
+ {read:"r2", s:["Ralf und Caroline waren mit dem Hotel zufrieden."], o:RF, a:1,
+  e:"<h4>Leseverstehen – die Information nach <i>aber</i></h4>Auf der Postkarte steht: „Unser Hotel war auch im Zentrum, <b>aber</b> das Zimmer war ein bisschen <b>laut</b>. Wir haben <b>nicht so gut geschlafen</b>.“ Nach <i>aber</i> folgt der wichtige Nachteil. Die beiden waren also <b>nicht zufrieden</b> → die Aussage ist <b>falsch</b>.<div class='rule'>Tipp: Wichtige Informationen stehen oft nach <i>aber</i>.</div>"}
+];
+
+const KEY = "netzwerk-a1-test-v1";
+let answers = new Array(40).fill(null);
+let submitted = false;
+try { const s = JSON.parse(localStorage.getItem(KEY)||"null"); if (s && Array.isArray(s.a) && s.a.length===40){ answers=s.a; submitted=!!s.sub; } } catch(e){}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify({a:answers, sub:submitted})); }catch(e){} }
+
+const L = ["a","b","c","d"];
+function lineHTML(t){
+  if (t.startsWith("A: ")) return '<p><span class="sp">–</span>'+t.slice(3)+'</p>';
+  if (t.startsWith("B: ")) return '<p><span class="sp">–</span>'+t.slice(3)+'</p>';
+  if (t.startsWith("L:")) return '<div class="letter">'+t.slice(2)+'</div>';
+  return '<p>'+t+'</p>';
+}
+function render(){
+  const root = document.getElementById("quiz");
+  let h = "";
+  Q.forEach((q,i)=>{
+    if (i===0) h += '<h2 class="sec"><span class="badge">A1.1</span> Abschnitt 1 · Fragen 1–20</h2>';
+    if (i===20) h += '<h2 class="sec"><span class="badge">A1.2</span> Abschnitt 2 · Fragen 21–40</h2>';
+    if (q.read && (i===18 || i===38)) h += '<div class="reading"><div class="lab">'+READ[q.read].lab+'</div>'+READ[q.read].html+'</div>';
+    h += '<article class="q" id="q'+(i+1)+'" data-i="'+i+'">';
+    h += '<div class="qhead"><span class="qnum">'+(i+1)+'.</span><div class="stem">'+q.s.map(lineHTML).join("")+'</div></div>';
+    h += '<div class="opts">'+q.o.map((o,j)=>'<button class="opt" data-j="'+j+'"><span class="k">'+(q.o===RF?(j?"F":"R"):L[j])+'</span><span>'+o+'</span></button>').join("")+'</div>';
+    h += '<div class="verdict"><span class="tag"></span><button class="explain-btn">Erklärung anzeigen</button></div>';
+    h += '<div class="explain">'+q.e+'</div>';
+    h += '</article>';
+  });
+  root.innerHTML = h;
+  root.querySelectorAll(".q").forEach(card=>{
+    const i = +card.dataset.i;
+    card.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+      if (submitted) return;
+      answers[i] = +b.dataset.j; save(); paint();
+    }));
+    card.querySelector(".explain-btn").addEventListener("click",()=>toggleExplain(i));
+  });
+  paint();
+}
+function toggleExplain(i, forceOpen){
+  const card = document.getElementById("q"+(i+1));
+  const ex = card.querySelector(".explain"), btn = card.querySelector(".explain-btn");
+  const open = forceOpen ? true : !ex.classList.contains("open");
+  ex.classList.toggle("open", open);
+  btn.textContent = open ? "Erklärung ausblenden" : "Erklärung anzeigen";
+}
+function paint(){
+  let n = 0;
+  Q.forEach((q,i)=>{
+    const card = document.getElementById("q"+(i+1));
+    const sel = answers[i];
+    if (sel!==null) n++;
+    card.classList.toggle("done", submitted);
+    card.querySelectorAll(".opt").forEach(b=>{
+      const j = +b.dataset.j;
+      b.classList.toggle("sel", !submitted && sel===j);
+      b.classList.toggle("correct", submitted && j===q.a);
+      b.classList.toggle("wrong", submitted && sel===j && j!==q.a);
+    });
+    // fill blank
+    const bl = card.querySelector(".blank");
+    if (bl){ bl.textContent = (sel!==null && q.o!==RF) ? q.o[sel] : "_____"; }
+    const tag = card.querySelector(".verdict .tag");
+    if (submitted){
+      if (sel===null){ tag.className="tag skip"; tag.textContent="Nicht beantwortet · Lösung: "+label(q,q.a); }
+      else if (sel===q.a){ tag.className="tag ok"; tag.textContent="✓ Richtig"; }
+      else { tag.className="tag bad"; tag.textContent="✗ Falsch · Richtige Lösung: "+label(q,q.a); }
+    }
+  });
+  document.getElementById("count").textContent = submitted ? "Abgegeben" : (n+" / 40");
+  document.getElementById("barFill").style.width = (n/40*100)+"%";
+  document.getElementById("submitBtn").style.display = submitted ? "none" : "";
+  document.getElementById("filter").style.display = submitted ? "flex" : "none";
+  if (submitted) showResult(); else { const r=document.getElementById("result"); r.classList.remove("show"); r.innerHTML=""; }
+}
+function label(q,j){ return q.o===RF ? q.o[j] : L[j]+") "+q.o[j]; }
+function showResult(){
+  const st = Q.map((q,i)=> answers[i]===null ? "skip" : (answers[i]===q.a ? "ok" : "bad"));
+  const s1 = st.slice(0,20).filter(x=>x==="ok").length;
+  const s2 = st.slice(20).filter(x=>x==="ok").length;
+  const total = s1+s2;
+  let lvl;
+  if (s1<15) lvl = "<b>Empfehlung: Kurs ab Niveau A1.1</b> (Netzwerk A1, Kapitel 1–6). Im Abschnitt A1.1 wurden weniger als 15 von 20 Punkten erreicht.";
+  else if (s2<15) lvl = "<b>Empfehlung: Kurs auf Niveau A1.2</b> (Netzwerk A1, Kapitel 7–12). Abschnitt A1.1 ist bestanden, Abschnitt A1.2 noch nicht (weniger als 15/20).";
+  else lvl = "<b>Empfehlung: Kurs auf Niveau A2.1</b> (Netzwerk A2). Beide Abschnitte sind mit mindestens 15/20 bestanden.";
+  const r = document.getElementById("result");
+  r.innerHTML =
+    '<h2 style="margin:0 0 4px;font-size:1.2rem">Ihr Ergebnis</h2>'+
+    '<div class="score-row"><div><div class="score-big">'+total+'<span style="font-size:1.2rem;color:var(--muted)"> / 40</span></div><div class="sub">richtige Antworten</div></div>'+
+    '<div class="secscore"><div class="sub">Abschnitt 1 · A1.1</div><div class="n" style="color:'+(s1>=15?"var(--ok)":"var(--bad)")+'">'+s1+' / 20</div><div class="sub">'+(s1>=15?"Bestanden (≥ 15)":"Nicht bestanden (≥ 15 nötig)")+'</div></div>'+
+    '<div class="secscore"><div class="sub">Abschnitt 2 · A1.2</div><div class="n" style="color:'+(s2>=15?"var(--ok)":"var(--bad)")+'">'+s2+' / 20</div><div class="sub">'+(s2>=15?"Bestanden (≥ 15)":"Nicht bestanden (≥ 15 nötig)")+'</div></div></div>'+
+    '<div class="level">'+lvl+'</div>'+
+    '<div style="font-weight:600;margin-bottom:8px">Klicken Sie auf eine Nummer, um die Erklärung zu sehen:</div>'+
+    '<div class="grid">'+st.map((x,i)=>'<button class="cell '+x+'" data-i="'+i+'">'+(i+1)+'</button>').join("")+'</div>'+
+    '<div class="legend"><span class="l1">Richtig</span><span class="l2">Falsch</span><span class="l3">Nicht beantwortet</span></div>';
+  r.classList.add("show");
+  r.querySelectorAll(".cell").forEach(c=>c.addEventListener("click",()=>{
+    const i=+c.dataset.i;
+    document.querySelector('input[name=f][value=all]').checked = true; applyFilter();
+    toggleExplain(i,true);
+    const card=document.getElementById("q"+(i+1));
+    card.scrollIntoView({behavior:"smooth",block:"start"});
+    card.classList.add("flash"); setTimeout(()=>card.classList.remove("flash"),1600);
+  }));
+}
+function applyFilter(){
+  const v = document.querySelector('input[name=f]:checked').value;
+  Q.forEach((q,i)=>{
+    const hide = v==="wrong" && answers[i]===q.a;
+    document.getElementById("q"+(i+1)).classList.toggle("hidden-q", hide);
+  });
+}
+document.querySelectorAll('input[name=f]').forEach(r=>r.addEventListener("change",applyFilter));
+
+function doSubmit(){
+  submitted = true; save(); paint(); applyFilter();
+  document.getElementById("result").scrollIntoView({behavior:"smooth",block:"start"});
+}
+const modal = document.getElementById("modal");
+let modalAction = null;
+function ask(text, okText, action){
+  document.getElementById("modalText").textContent = text;
+  document.getElementById("modalOk").textContent = okText;
+  modalAction = action; modal.classList.add("show");
+}
+document.getElementById("modalCancel").onclick = ()=>modal.classList.remove("show");
+document.getElementById("modalOk").onclick = ()=>{ modal.classList.remove("show"); if(modalAction) modalAction(); };
+document.getElementById("submitBtn").onclick = ()=>{
+  const left = answers.filter(a=>a===null).length;
+  if (left>0) ask("Sie haben noch "+left+" Frage(n) nicht beantwortet. Leere Antworten zählen als falsch.", "Trotzdem abgeben", doSubmit);
+  else doSubmit();
+};
+document.getElementById("resetBtn").onclick = ()=>{
+  ask("Alle Antworten löschen und neu beginnen?", "Neu starten", ()=>{
+    answers = new Array(40).fill(null); submitted=false; save();
+    document.querySelector('input[name=f][value=all]').checked = true;
+    render(); applyFilter(); window.scrollTo({top:0,behavior:"smooth"});
+  });
+};
+render(); if (submitted) applyFilter();
+</script>
+</body>
+</html>
